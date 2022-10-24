@@ -1,0 +1,70 @@
+-- UCC
+    UCCMin := 0uh16_e080; --"ucc1min";
+    UCCMax := 0uh16_e081; --"ucc1max";
+    RTN := "return_address";
+    Base_PTR := "base_pointer";
+    
+-- METADATA\Code region
+    META_BASE := 0uh16_0160;
+    META_SIZE := 0uh16_0004;
+    LAST_META := META_BASE + META_SIZE;
+
+-- Code Region
+-------------------------------------------------------------
+    daddr_not_in_CR := "data_addr" < META_BASE | "data_addr" > LAST_META;
+    daddr_in_CR := !daddr_not_in_CR;
+
+
+-- UCC
+-------------------------------------------------------------
+    valid_region := UCCMin < UCCMax;
+    pc_fst_UCC := "pc" = UCCMin;
+    pc_last_UCC := "pc" = (UCCMax);
+    pc_in_UCC := "pc" >= UCCMin & "pc" <= (UCCMax);
+    next_pc_in_UCC := next("pc") >= UCCMin & next("pc") <= UCCMax;
+    not_pc_in_UCC := !pc_in_UCC;
+    
+
+    RESET_HANDLER := 0uh16_0000;
+
+-----------------------------
+-----UCCA s PROPERTIES-----
+-----------------------------
+
+-- Reset correctness
+LTLSPEC G ("reset" -> (("reset" U "pc" = RESET_HANDLER) | G("reset")));
+
+
+-- Region validity
+LTLSPEC G (!valid_region -> "reset");
+
+
+-- Atomicity Rules: (1) cannot leave in the middle of ROM code and (2) cannot jump into the middle of ROM code ---
+LTLSPEC G ( (!"reset" & (pc_in_UCC) & (!next_pc_in_UCC)) -> (pc_last_UCC | next("reset")) );
+LTLSPEC G ( (!"reset" & (!pc_in_UCC) & (next_pc_in_UCC)) -> (next("pc") = UCCMin | next("reset")) );
+--LTLSPEC G (pc_in_srom & "irq" -> "reset");
+
+
+-- Return Address Integrity
+-----------------------------
+LTLSPEC G (!"reset" & !pc_in_UCC & (next("pc") = UCCMin)  -> (next(RTN) = "pc" + 0uh16_0004));
+LTLSPEC G ( !"reset" & !pc_in_UCC & (next("pc") = UCCMin) -> ( (RTN = next(RTN)) U not_pc_in_UCC));
+LTLSPEC G (!"reset" & pc_last_UCC & !next_pc_in_UCC -> next("pc") = RTN | next("reset"));
+
+
+-- Stack Protection
+----------------------------
+LTLSPEC G ( !"reset" & !pc_in_UCC & (next("pc") = UCCMin) -> next(Base_PTR) = "stack_pointer");
+LTLSPEC G (!"reset" & !pc_in_UCC & (next("pc") = UCCMin) -> ( ((Base_PTR = next(Base_PTR)) U not_pc_in_UCC)));
+LTLSPEC G ((!"reset" & (pc_in_UCC) & "data_wr" & ("data_addr" > Base_PTR)) -> next("reset") );
+
+-- Code Region Protection
+----------------------------
+LTLSPEC G (!"reset" & (daddr_in_CR & "data_wr") -> next("reset"));
+
+--LTLSPEC ("reset" U ("pc" = RESET_HANDLER) | G"reset");
+--it s Weak until http://nusmv.fbk.eu/courses/icaps03/icaps03-mct.pdf p31
+----------------------------
+
+
+
