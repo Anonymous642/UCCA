@@ -181,7 +181,8 @@ After completing the steps 1-10 in [Creating a Vivado Project for UCCA]:
 
 4- On the newly opened simulation window, select a time span for your simulation to run (see times for each default test-case below) and the press "Shift+F2" to run.
 
-5- In the green wave window you will see values for several signals. The imporant ones are "vrased_reset", and "pc[15:0]". pc cointains the program counter value. vrased_reset corresponds to the value of UCCA's reset signal, as described in the paper.
+5- In the green wave window you will see values for several signals. The imporant ones are "vrased_reset", and "pc[15:0]". pc cointains the program counter value. vrased_reset corresponds to the value of UCCA's reset signal, as described in the paper. To add vrased_reset to the simulation waveform, click tb_openMSP430_fpga -> dut -> openMSP430_0 in the Scope window. Then in the Objects window search for vrased_reset, right click it, and select add to wave window. This will add the signal to the bottom of the waveform.
+
 
 In Vivado simulation, all test-cases provided by default loop infinitely. For all test-cases except simple_app the device should reset in the middle of execution.
 
