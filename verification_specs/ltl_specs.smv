@@ -17,7 +17,7 @@
 
 -- UCC
 -------------------------------------------------------------
-    valid_region := UCCMin < UCCMax;
+    valid_region := UCCMin <= UCCMax;
     pc_fst_UCC := "pc" = UCCMin;
     pc_last_UCC := "pc" = (UCCMax);
     pc_in_UCC := "pc" >= UCCMin & "pc" <= (UCCMax);
@@ -56,11 +56,11 @@ LTLSPEC G (!"reset" & pc_last_UCC & !next_pc_in_UCC -> next("pc") = RTN | next("
 ----------------------------
 LTLSPEC G ( !"reset" & !pc_in_UCC & (next("pc") = UCCMin) -> next(Base_PTR) = "stack_pointer");
 LTLSPEC G (!"reset" & !pc_in_UCC & (next("pc") = UCCMin) -> ( ((Base_PTR = next(Base_PTR)) U not_pc_in_UCC)));
-LTLSPEC G ((!"reset" & (pc_in_UCC) & "data_wr" & ("data_addr" > Base_PTR)) -> next("reset") );
+LTLSPEC G (((pc_in_UCC) & "data_wr" & ("data_addr" > Base_PTR)) -> "reset" );
 
 -- Code Region Protection
 ----------------------------
-LTLSPEC G (!"reset" & (daddr_in_CR & "data_wr") -> next("reset"));
+LTLSPEC G (daddr_in_CR & "data_wr" -> "reset");
 
 --LTLSPEC ("reset" U ("pc" = RESET_HANDLER) | G"reset");
 --it s Weak until http://nusmv.fbk.eu/courses/icaps03/icaps03-mct.pdf p31

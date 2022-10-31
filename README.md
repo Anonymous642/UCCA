@@ -1,10 +1,10 @@
-# UCCA-M:
+# UCCA:
 
-Special-purpose micro-controller units (MCUs) have become ubiquitous. They appear in a wide variety of sensing/actuation applications, from smart personal spaces to complex industrial control systems and safety-critical medical equipment. While many of these devices perform safety-critical tasks, they often lack support for security features compatible with their importance to overall system functions. This lack of architectural support leaves them vulnerable to run-time attacks that can remotely alter their intended behavior, with potentially catastrophic consequences. In particular, we note that (despite existing mechanisms, such as memory protection units -- MPUs) MCU software often includes untrusted third party libraries (some of them closed-source) that are blindly used within MCU code, without proper isolation from the rest of the system. In turn, a single vulnerability (or intentional backdoor) in one such third-party software can often compromise the entire MCU.
+Special-purpose micro-controller units (MCUs) have become ubiquitous. They appear in a wide variety of sensing/actuation applications, from smart personal spaces to complex industrial control systems and safety-critical medical equipment. While many of these devices perform safety-critical tasks, they often lack support for security features compatible with their importance to overall system functions. This lack of architectural support leaves them vulnerable to run-time attacks that can remotely alter their intended behavior, with potentially catastrophic consequences. In particular, we note that (despite existing mechanisms, such as memory protection units -- MPUs) MCU software often includes untrusted third-party libraries (some of them closed-source) that are blindly used within MCU code, without proper isolation from the rest of the system. In turn, a single vulnerability (or intentional backdoor) in one such third-party software can often compromise the entire MCU.
 
-In this paper, we tackle this problem by designing, demonstrating security, and formally verifying the implementation of UCCA-M: an <ins>U</ins>ntrusted <ins>C</ins>ode <ins>C</ins>ompartment <ins>A</ins>rchitecture for <ins>M</ins>CUs. UCCA-M provides flexible hardware-enforced isolation of untrusted code sections (e.g., third party software modules) in resource-constrained embedded devices. UCCA-M is transparent to (and can be used jointly with) existing hardware and software on the device. To demonstrate UCCA-M practicality, we implement an open-source version of the design on a real resource-constrained MCU: the well-known TI MSP430. Our evaluation shows that UCCA-M incurs little overhead and is affordable even to lowest-end MCUs, incurring significantly less overhead and required assumptions than prior related work.
+In this paper, we tackle this problem by designing, demonstrating security, and formally verifying the implementation of UCCA: an <ins>U</ins>ntrusted <ins>C</ins>ode <ins>C</ins>ompartment <ins>A</ins>rchitecture. UCCA provides flexible hardware-enforced isolation of untrusted code sections (e.g., third-party software modules) in resource-constrained embedded devices. UCCA is transparent to (and can be used jointly with) existing hardware and software on the device. To demonstrate UCCA practicality, we implement an open-source version of the design on a real resource-constrained MCU: the well-known TI MSP430. Our evaluation shows that UCCA incurs little overhead and is affordable even to lowest-end MCUs, incurring significantly less overhead and required assumptions than prior related work.
 
-### UCCA-M Directory Structure
+### UCCA Directory Structure
 
 	├── msp_bin
 	├── openmsp430
@@ -76,14 +76,14 @@ Dependencies on Ubuntu:
 		cd scripts
 		sudo make install
 
-## Building UCCA-M Software 
+## Building UCCA Software 
 To generate the Microcontroller program memory configuration containing UCC definitions (CR) and sample applications we are going to use the Makefile inside the scripts directory:
 
         cd scripts
 
 This repository accompanies 6 categories of test-cases: simple_app, violations_controlled_invocation, violations_cr_integrity, violations_region_validity, violations_return_integrity, and violations_stack_protection. (See [Description of Provided test-cases] for details on each test-case)
 These test-cases correspond to one benign execution and scenarios where the device is reset due to a violation that could be used to attack the correctness of the execution.
-To build UCCA-M for a specific test-case run:
+To build UCCA for a specific test-case run:
 
         make "name of test-case"
 
@@ -99,7 +99,7 @@ As a result of the build, two files pmem.mem and cr.mem should be created inside
 
 - cr.mem contains UCC definitions.
 
-In the next steps, during synthesis, these files will be loaded to the MSP430 memory when we run UCCA-M simulation using VIVADO simulation tools.
+In the next steps, during synthesis, these files will be loaded to the MSP430 memory when we run UCCA simulation using VIVADO simulation tools.
 
 If you want to clean the built files run:
 
@@ -107,21 +107,21 @@ If you want to clean the built files run:
 
         Note: Latest Build tested using msp430-gcc (GCC) 4.6.3 2012-03-01
 
-To test UCCA-M with a different application you will need to repeat these steps to generate the new "pmem.mem" file and re-run synthesis.
+To test UCCA with a different application you will need to repeat these steps to generate the new "pmem.mem" file and re-run synthesis.
 
-## Creating an UCCA-M project on Vivado and Running Synthesis
+## Creating an UCCA project on Vivado and Running Synthesis
 
-This is an example of how to synthesize and prototype UCCA-M using Basys3 FPGA and XILINX Vivado v2022.1 (64-bit) IDE for Linux
+This is an example of how to synthesize and prototype UCCA using Basys3 FPGA and XILINX Vivado v2022.1 (64-bit) IDE for Linux
 
 - Vivado IDE is available to download at: https://www.xilinx.com/support/download.html
 
 - Basys3 Reference/Documentation is available at: https://reference.digilentinc.com/basys3/refmanual
 
-#### Creating a Vivado Project for UCCA-M
+#### Creating a Vivado Project for UCCA
 
 1 - Clone this repository;
 
-2 - Follow the steps in [Building UCCA-M Software](#building-UCCA-M-software) to generate .mem files for the application of your choice.
+2 - Follow the steps in [Building UCCA Software](#building-UCCA-software) to generate .mem files for the application of your choice.
 
 2- Start Vivado. On the upper left select: File -> New Project
 
@@ -138,7 +138,7 @@ This is an example of how to synthesize and prototype UCCA-M using Basys3 FPGA a
 
 and select Next.
 
-Note that /msp_bin contains the pmem.mem and cr.mem binaries, generated in step [Building UCCA-M Software].
+Note that /msp_bin contains the pmem.mem and cr.mem binaries, generated in step [Building UCCA Software].
 
 5- In the "Add Constraints" window, select add files and add the file
 
@@ -146,13 +146,13 @@ Note that /msp_bin contains the pmem.mem and cr.mem binaries, generated in step 
 
 and select Next.
 
-        Note: this file needs to be modified accordingly if you are running UCCA-M in a different FPGA.
+        Note: this file needs to be modified accordingly if you are running UCCA in a different FPGA.
 
 6- In the "Default Part" window select "Boards", search for Basys3, select it, and click Next.
 
         Note: if you don't see Basys3 as an option you may need to download Basys3 to your Vivado installation.
 
-7- Select "Finish". This will conclude the creation of a Vivado Project for UCCA-M.
+7- Select "Finish". This will conclude the creation of a Vivado Project for UCCA.
 
 Now we need to configure the project for systhesis.
 
@@ -161,17 +161,17 @@ This will make openMSP430_fpga.v the top module in the project hierarchy. Now it
 
 9- In the same "Sources" window, search for openMSP430_defines.v file, right click it and select Set File Type and, from the dropdown menu select "Verilog Header".
 
-Now we are ready to synthesize openmsp430 with UCCA-M hardware the following step might take several minutes.
+Now we are ready to synthesize openmsp430 with UCCA hardware the following step might take several minutes.
 
 10- On the left menu of the PROJECT MANAGER click "Run Synthesis", select execution parameters (e.g, number of CPUs used for synthesis) according to your PC's capabilities.
 
-11- If synthesis succeeds, you will be prompted with the next step to "Run Implementation". You *do not* need to "Run Implementation" to simulate UCCA-M.
+11- If synthesis succeeds, you will be prompted with the next step to "Run Implementation". You *do not* need to "Run Implementation" to simulate UCCA.
 
-To simulate UCCA-M using VIVADO sim-tools, continue following the instructions on [Running UCCA-M on Vivado Simulation Tools].
+To simulate UCCA using VIVADO sim-tools, continue following the instructions on [Running UCCA on Vivado Simulation Tools].
 
-## Running UCCA-M on Vivado Simulation Tools
+## Running UCCA on Vivado Simulation Tools
 
-After completing the steps 1-10 in [Creating a Vivado Project for UCCA-M]:
+After completing the steps 1-10 in [Creating a Vivado Project for UCCA]:
 
 1- In Vivado, click "Add Sources" (Alt-A), then select "Add or create simulation sources", click "Add Files", and select everything inside openmsp430/simulation.
 
@@ -181,19 +181,19 @@ After completing the steps 1-10 in [Creating a Vivado Project for UCCA-M]:
 
 4- On the newly opened simulation window, select a time span for your simulation to run (see times for each default test-case below) and the press "Shift+F2" to run.
 
-5- In the green wave window you will see values for several signals. The imporant ones are "vrased_reset", and "pc[15:0]". pc cointains the program counter value. vrased_reset corresponds to the value of UCCA-M's reset signal, as described in the paper.
+5- In the green wave window you will see values for several signals. The imporant ones are "vrased_reset", and "pc[15:0]". pc cointains the program counter value. vrased_reset corresponds to the value of UCCA's reset signal, as described in the paper.
 
 In Vivado simulation, all test-cases provided by default loop infinitely. For all test-cases except simple_app the device should reset in the middle of execution.
 
-To determine the address of an instruction, e.g, the start and end addresses of UCC (values of UCC_min and UCC_max, per UCCA-M's paper) one can check the compilation file at scripts/tmp-build/XX/vrased.lst  (where XX is the name of the test-case, i.e., if you ran "make simple_app", XX=simple_app). In this file search for the name of the function of interest, e.g., "regionOne" or "secureFunction", etc.
+To determine the address of an instruction, e.g, the start and end addresses of UCC (values of UCC_min and UCC_max, per UCCA's paper) one can check the compilation file at scripts/tmp-build/XX/vrased.lst  (where XX is the name of the test-case, i.e., if you ran "make simple_app", XX=simple_app). In this file search for the name of the function of interest, e.g., "regionOne" or "secureFunction", etc.
 
-#### NOTE: To simulate a different test-case you need to re-run "make test-case_name" to generate the corresponding pmem.mem file and re-run the synthesis step (step 10 in [Creating a Vivado Project for UCCA-M]) on Vivado. 
+#### NOTE: To simulate a different test-case you need to re-run "make test-case_name" to generate the corresponding pmem.mem file and re-run the synthesis step (step 10 in [Creating a Vivado Project for UCCA]) on Vivado. 
 
 ## Description of Provided test-cases
 
-	For details on how UCCA-M isolates regions in memory (UCCs) and mitigate attack escalation please check the UCCA-M paper. 
+	For details on how UCCA isolates regions in memory (UCCs) and mitigate attack escalation please check the UCCA paper. 
 
-All test-cases use two UCCs. The first UCC isolates a vulnerable buffer copy that is meant to simulate user input. The second UCC isolates the password comparison functionality. The password comparison function is not vulnerable does not need to be isolated, however, this isolation allows for testing UCCA-M with multiple UCCs. All test-cases were configured to run as is. If edited, the region definitions at the top of the respective test's main.c may need to be adjusted.
+All test-cases use two UCCs. The first UCC isolates a vulnerable buffer copy that is meant to simulate user input. The second UCC isolates the password comparison functionality. The password comparison function is not vulnerable does not need to be isolated, however, this isolation allows for testing UCCA with multiple UCCs. All test-cases were configured to run as is. If edited, the region definitions at the top of the respective test's main.c may need to be adjusted.
 
 #### 1- simple_app:
 
@@ -237,7 +237,7 @@ This should occur around 246 microseconds into the simulation.
 
 ###### 2.6- malicious_jump_within
 
-Corresponds to a test-case where execution jumps from the middle of a UCC to another address within UCC. Controlled Invocation is not violated and execution continues. Specifically this test causes the "getUserInput" function to return to the start of itself (pc = E266 -> pc = E23E). The cause the function to keep re-executing and trapping execution within UCC. This demosntrates how UCCA-M simply prevents escalation of attacks but anything within UCC is still vulnerable.
+Corresponds to a test-case where execution jumps from the middle of a UCC to another address within UCC. Controlled Invocation is not violated and execution continues. Specifically this test causes the "getUserInput" function to return to the start of itself (pc = E266 -> pc = E23E). The cause the function to keep re-executing and trapping execution within UCC. This demosntrates how UCCA simply prevents escalation of attacks but anything within UCC is still vulnerable.
 
 This should occur around 246 microseconds into the simulation.
 
@@ -320,11 +320,11 @@ This should occur around 108 microseconds into the simulation.
 
 <img src="./img/violation.png" width="900" height="150">
 
-## Running UCCA-M Verification
+## Running UCCA Verification
 
-To check HW-Mod against UCCA-M LTL subproperties using NuSMV run:
+To check HW-Mod against UCCA LTL subproperties using NuSMV run:
 
         make verify
 
-Note that running make verify proofs may take a few minutes. On our implementation verification of UCCA-M took <1 second. However this time may vary based on your system.
+Note that running make verify proofs may take a few minutes. On our implementation verification of UCCA took <1 second. However this time may vary based on your system.
 
