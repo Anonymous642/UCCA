@@ -23,6 +23,7 @@ module  CR_peripheral (
     ucc8min,                          
     ucc8max,
 */
+);
 
 
 // OUTPUTs
