@@ -595,15 +595,7 @@ omsp_mem_backbone mem_backbone_0 (
     .scan_enable       (scan_enable)         // Scan enable (active during scan shifting)
 );
 
-wire               irq_jmp;
-interrupt_monitor interrupt_monitor_0 (
-    .clk          (dma_mclk),
-    .irq          (irq_detect),
-    .gie          (gie),
-    
-    .irq_jmp      (irq_jmp)
-    
-);
+wire               irq_jmp = (e_state == 4'hb & inst_so == 8'h80);
 
 wire [15:0] op_dest;
 return_address_tracker return_address_tracker_0(
