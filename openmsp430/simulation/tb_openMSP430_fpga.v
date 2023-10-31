@@ -153,15 +153,15 @@ wire [15:0] OP_ret =     dut.openMSP430_0.hdmod_0.op_dest;
 
 wire [1:0] ucc1_state = dut.openMSP430_0.hdmod_0.UCCA_region_0.ucc_state;
 wire       ucc1_return_integrity_reset = dut.openMSP430_0.hdmod_0.UCCA_region_0.return_integrity_reset;
-wire       ucc1_stack_integrity_reset = dut.openMSP430_0.hdmod_0.UCCA_region_0.stock_protection_reset;
+wire       ucc1_stack_integrity_reset = dut.openMSP430_0.hdmod_0.UCCA_region_0.stack_protection_reset;
 
 wire [1:0] ucc2_state = dut.openMSP430_0.hdmod_0.UCCA_region_1.ucc_state;
 wire       ucc2_return_integrity_reset = dut.openMSP430_0.hdmod_0.UCCA_region_1.return_integrity_reset;
-wire       ucc2_stack_integrity_reset = dut.openMSP430_0.hdmod_0.UCCA_region_1.stock_protection_reset;
+wire       ucc2_stack_integrity_reset = dut.openMSP430_0.hdmod_0.UCCA_region_1.stack_protection_reset;
 
 wire [1:0] ucc3_state = dut.openMSP430_0.hdmod_0.UCCA_region_2.ucc_state;
 wire       ucc3_return_integrity_reset = dut.openMSP430_0.hdmod_0.UCCA_region_2.return_integrity_reset;
-wire       ucc3_stack_integrity_reset = dut.openMSP430_0.hdmod_0.UCCA_region_2.stock_protection_reset;
+wire       ucc3_stack_integrity_reset = dut.openMSP430_0.hdmod_0.UCCA_region_2.stack_protection_reset;
 
 // RESET SIGNAL
 //wire         puc_rst = dut.puc_rst;
