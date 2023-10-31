@@ -183,10 +183,27 @@ After completing the steps 1-10 in [Creating a Vivado Project for UCCA]:
 
 4- On the newly opened simulation window, select a time for your simulation to run (see times for each default test case below) and press "Shift+F2" to run.
 
-5- In the green wave window you will see values for several signals. The imporant ones are "ucca_reset", and "pc[15:0]". pc contains the program counter value. ucca_reset corresponds to the value of UCCA's reset signal, as described in the paper. To add ucca_reset to the simulation waveform, click tb_openMSP430_fpga -> dut -> openMSP430_0 in the Scope window. Then in the Objects window search for ucca_reset, right-click it, and select add to wave window. This will add the signal to the bottom of the waveform.
+5- In the green wave window you will see values for several signals. This window includes many UCCA signals important to demonstrating UCCA's protections. By default, the waveform includes the following signals:
 
+    - pc: The currently executing instruction
+    - ucca_reset: The main reset wire of UCCA indicating if any violation of UCCA protections has occurred
+    - W_en: The write enabled bit indicating if the MCU is writing to memory
+    - D_addr: The memory address to which the MCU is reading/writing
+    - SP: The current value of the stack pointer
+    - IRQ_jmp: The IRQ_jmp bit indicating if a jump to an ISR is occurring
+    - OP_ret: The Operation return address which holds the return address of jump, call, and exec instructions
 
-In Vivado simulation, all test cases provided by default loop infinitely. For all test cases except simple_app, co-located_isr, and two_isrs the device should reset in the middle of execution.
+Along with these generic signals, the waveform also includes UCC-specific signals for a better understanding of the device state, what triggered a violation, and why. These signals are:
+
+    - uccx_state: Which state (from the sub-module finite state machines) the UCC is in
+    - uccx_return_integrity_reset: The reset signal from the UCC's return integrity sub-module
+    - uccx_expected_return: The Ret_exp value saved when execution enters the UCC
+    - uccx_stack_integrity_reset: The reset signal from UCC's stack integrity sub-module
+    - uccx_base_pointer: The base pointer value for UCC's isolated stack frame
+
+where x is representative of the UCC ID such as ucc1. To add more signals to the waveform navigate to the scope window, navigate to the hardware module (dut->openMSP430_0->hdmod_0), and then simply select the module whose signal you want to add. Once a module is selected, the objects window will show all the wires and registers defined in the module. To add a signal to the waveform, right-click the value in the objects menu and select "Add to Wave Window".
+
+In Vivado simulation, all test cases provided loop infinitely by default. For all test cases except simple_app, co-located_isr, and two_isrs the device should reset in the middle of execution.
 
 To determine the address of an instruction, e.g., the start and end addresses of UCC (values of UCC_min and UCC_max, per UCCA's paper) one can check the compilation file at scripts/tmp-build/XX/ucca.lst  (where XX is the name of the test case, i.e., if you run "make simple_app", XX=simple_app). In this file search for the name of the function of interest, e.g., "regionOne" or "secureFunction", etc.
 
@@ -214,24 +231,34 @@ Simple_app can be modified to simulate a failed authentication attempt. To do th
 
 As discussed in the previous section, to trigger an interrupt in the simulation you need to edit values within the simulation. For all tests, the test interrupt is triggered using BTN0 in the simulation. For tests with more than 1 interrupt the second interrupt is connected to BTN1. First, you will need to locate the button in the waveform.
 
-<img src="./img/button.png" width="325" height="29">
-
+<p align="center">
+    <img src="./img/button.png" width="325" height="29">
+<\p>
+	
 Once found, right-click the button and select "Force Constant".
 
-<img src="./img/force.png" width="335" height="248">
-
+<p align="center">
+    <img src="./img/force.png" width="335" height="248">
+<\p>
+	
 In the menu that opens up, you will need to set the appropriate value for the wire. To do that first click the dropdown menu next to "Value radix" and select binary.
 
-<img src="./img/binary.png" width="858" height="394">
-
+<p align="center">
+    <img src="./img/binary.png" width="858" height="394">
+<\p>
+	
 Then for "Force value" enter 1 and press okay
 
-<img src="./img/set.png" width="855" height="391">
-
+<p align="center">
+    <img src="./img/set.png" width="855" height="391">
+<\p>
+	
 Now the signal is set and you simply need to run the simulation for a single microsecond. This is enough for the system to detect the signal and begin to process of handling the interrupt. To prevent the system from continually interrupting you need to remove the force on the wire. To do this, once again right-click BTN0 and select "Remove Force"
 
-<img src="./img/remove.png" width="363" height="258">
-
+<p align="center">
+    <img src="./img/remove.png" width="363" height="258">
+<\p>
+	
 #### 3- co-located_isr:
 
 This test case is a variant of the simple_app program, however, unlike simple_app the ISR is isolated within the same UCC as the password comparison function. This example demonstrates that if a UCC is interrupted, but remains within itself for the ISR, the properties enforced by UCCA are not maintained.
@@ -328,11 +355,11 @@ This should occur around 114 microseconds into the simulation.
 
 - Simulation window for a benign execution of simple_app: 
 
-<img src="./img/wave_good.png" width="1598" height="520">
+<img src="./img/wave_good.png" width="1100" height="400">
 
 - Simulation window for a Violation example. Violation occurs at instruction PC=E25E causing ucca_reset to switch to 1 and the device to reset (PC = 0000): 
 
-<img src="./img/reset.png" width="1583" height="84">
+<img src="./img/reset.png" width="1100" height="70">
 
 ## Running UCCA Verification
 
