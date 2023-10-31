@@ -37,19 +37,19 @@ malicious_return_complex :
 	sh build/run "violations_return_integrity/malicious_return_complex" true
 	
 malicious_stack_write_simple :
-	sh build/run "violations_stack_protection/malicious_stack_write_simple" true
+	sh build/run "violations_stack_integrity/malicious_stack_write_simple" true
 	
 malicious_stack_write_complex :
-	sh build/run "violations_stack_protection/malicious_stack_write_complex" true
+	sh build/run "violations_stack_integrity/malicious_stack_write_complex" true
 	
 write_to_pointer :
-	sh build/run "violations_stack_protection/write_to_pointer" true
+	sh build/run "violations_stack_integrity/write_to_pointer" true
 	
 isr_write_invalid :
-	sh build/run "violations_stack_protection/isr_write_invalid" true
+	sh build/run "violations_stack_integrity/isr_write_invalid" true
 	
 isr_write_valid :
-	sh build/run "violations_stack_protection/isr_write_valid" true
+	sh build/run "violations_stack_integrity/isr_write_valid" true
 
 verify_general :
 	sh verif-tools/run "ucca"
