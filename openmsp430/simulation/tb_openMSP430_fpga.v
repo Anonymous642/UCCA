@@ -141,8 +141,27 @@ reg               stimulus_done;
 ////VAPE's EXEC_FLAG
 //wire         EXEC_FLAG = dut.exec_flag;
 
+// UCCA SIGNALS
+wire        ucca_reset = dut.openMSP430_0.ucca_reset;
+wire        W_en =       dut.openMSP430_0.hdmod_0.data_wr;
+wire [15:0] D_addr =     dut.openMSP430_0.hdmod_0.data_addr;
+wire [15:0] SP =         dut.openMSP430_0.hdmod_0.stack_pointer;
+wire        IRQ_jmp =    dut.openMSP430_0.hdmod_0.irq_jmp;
+wire [15:0] OP_ret =     dut.openMSP430_0.hdmod_0.op_dest;
 
+// UCC SPECIFIC SIGNALS
 
+wire [1:0] ucc1_state = dut.openMSP430_0.hdmod_0.UCCA_region_0.ucc_state;
+wire       ucc1_return_integrity_reset = dut.openMSP430_0.hdmod_0.UCCA_region_0.return_integrity_reset;
+wire       ucc1_stack_integrity_reset = dut.openMSP430_0.hdmod_0.UCCA_region_0.stock_protection_reset;
+
+wire [1:0] ucc2_state = dut.openMSP430_0.hdmod_0.UCCA_region_1.ucc_state;
+wire       ucc2_return_integrity_reset = dut.openMSP430_0.hdmod_0.UCCA_region_1.return_integrity_reset;
+wire       ucc2_stack_integrity_reset = dut.openMSP430_0.hdmod_0.UCCA_region_1.stock_protection_reset;
+
+wire [1:0] ucc3_state = dut.openMSP430_0.hdmod_0.UCCA_region_2.ucc_state;
+wire       ucc3_return_integrity_reset = dut.openMSP430_0.hdmod_0.UCCA_region_2.return_integrity_reset;
+wire       ucc3_stack_integrity_reset = dut.openMSP430_0.hdmod_0.UCCA_region_2.stock_protection_reset;
 
 // RESET SIGNAL
 //wire         puc_rst = dut.puc_rst;
