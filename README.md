@@ -233,31 +233,31 @@ As discussed in the previous section, to trigger an interrupt in the simulation 
 
 <p align="center">
     <img src="./img/button.png" width="325" height="29">
-<\p>
+</p>
 	
 Once found, right-click the button and select "Force Constant".
 
 <p align="center">
     <img src="./img/force.png" width="335" height="248">
-<\p>
+</p>
 	
 In the menu that opens up, you will need to set the appropriate value for the wire. To do that first click the dropdown menu next to "Value radix" and select binary.
 
 <p align="center">
     <img src="./img/binary.png" width="858" height="394">
-<\p>
+</p>
 	
 Then for "Force value" enter 1 and press okay
 
 <p align="center">
     <img src="./img/set.png" width="855" height="391">
-<\p>
+</p>
 	
 Now the signal is set and you simply need to run the simulation for a single microsecond. This is enough for the system to detect the signal and begin to process of handling the interrupt. To prevent the system from continually interrupting you need to remove the force on the wire. To do this, once again right-click BTN0 and select "Remove Force"
 
 <p align="center">
     <img src="./img/remove.png" width="363" height="258">
-<\p>
+</p>
 	
 #### 3- co-located_isr:
 
