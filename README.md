@@ -187,6 +187,7 @@ After completing the steps 1-10 in [Creating a Vivado Project for UCCA]:
 
     - pc: The currently executing instruction
     - ucca_reset: The main reset wire of UCCA indicating if any violation of UCCA protections has occurred
+    - cr_integrity_reset: The reset signal from UCCA's CR integrity sub-module
     - W_en: The write enabled bit indicating if the MCU is writing to memory
     - D_addr: The memory address to which the MCU is reading/writing
     - SP: The current value of the stack pointer
@@ -337,7 +338,7 @@ Like previous interrupt-based tests, this behavior can be performed anytime afte
 
 This corresponds to a test case where a UCC attempts to write to an address on the stack below its own stack frame (D_addr below Base Pointer). Exploiting the vulnerable buffer within the "getUserInput" function causes UCC to attempt to write below its Base Pointer. This violates the stack isolation, ucca_reset is set to 1 and the device is reset (pc = 0).
 
-This should occur around 228 microseconds into the simulation.
+This should occur around 233 microseconds into the simulation.
 
 ###### 7.4- malicious_stack_write_simple
 
@@ -345,7 +346,13 @@ This corresponds to a test case where a UCC attempts to write to an address on t
 
 This should occur around 204 microseconds into the simulation.
 
-###### 7.5- write_to_pointer
+###### 7.5 malicious_stack_pointer
+
+This corresponds to a test case where UCC attempts to write malicious data to the stack and return early corrupting the stack pointer and creating an adversarial controlled stack. This violates the stack integrity as the stack pointer doesn't match the base pointer so ucca_reset is set to 1 anf the device is reset. To make testing easier this sample program is instrumented similarly to malicious_stack_write_simple.
+
+The attack and subsequent reset should occure around 204 microseconds into the simulation.
+
+###### 7.6- write_to_pointer
 
 This corresponds to a test case where a UCC attempts to write to an address on the stack below its own stack frame (D_addr below Base Pointer). A stack buffer is initialized outside UCC and a reference to the buffer is passed to UCC. When UCC attempts to write this buffer the stack isolation is violated, ucca_reset is set to 1 and the device is reset (pc = 0). This demonstrates that the stack isolation prevents references to variables on the stack from being used within a UCC. However, UCC can still access values in the heap as shown in simple_app and all other test cases.
 

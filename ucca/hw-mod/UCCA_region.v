@@ -11,6 +11,7 @@ module UCCA_region (
 // INPUT//////////////////////////////////////////////////////////////////
     clk,
     pc,
+    inst_changed,
     data_en,
     data_wr,
     data_addr,
@@ -35,6 +36,7 @@ module UCCA_region (
 
 input         clk;
 input  [15:0] pc;
+input         inst_changed;
 input         data_en;
 input         data_wr;
 input  [15:0] data_addr;
@@ -109,6 +111,7 @@ stack_protection #(
     .data_addr     (data_addr),
     .data_wr       (data_wr),
     .pc            (pc),
+    .inst_changed  (inst_changed),
     .stack_pointer (stack_pointer),
     .system_reset  (system_reset),
     .outside_ucc   (outside_ucc),

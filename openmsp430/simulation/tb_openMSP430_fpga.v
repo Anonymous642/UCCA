@@ -143,6 +143,7 @@ reg               stimulus_done;
 
 // UCCA SIGNALS
 wire        ucca_reset = dut.openMSP430_0.ucca_reset;
+wire        cr_integrity_reset = dut.openMSP430_0.hdmod_0.cr_integrity_reset;
 wire        W_en =       dut.openMSP430_0.hdmod_0.data_wr;
 wire [15:0] D_addr =     dut.openMSP430_0.hdmod_0.data_addr;
 wire [15:0] SP =         dut.openMSP430_0.hdmod_0.stack_pointer;

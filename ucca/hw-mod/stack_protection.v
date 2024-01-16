@@ -4,6 +4,8 @@ module stack_protection (
     data_addr,
     data_wr,
     pc,
+    //prev_pc,
+    inst_changed,
     stack_pointer,
     system_reset,
     outside_ucc,
@@ -20,6 +22,8 @@ input          clk;
 input  [15:0]  data_addr;
 input          data_wr;
 input  [15:0]  pc;
+//input  [15:0]  prev_pc;
+input          inst_changed;
 input  [15:0]  stack_pointer;
 input          system_reset;
 input          outside_ucc;
@@ -40,21 +44,25 @@ parameter IRQ    = 2'b10;
 parameter RESET_HANDLER = 16'h0000;
 
 reg [15:0] ebp;
+//reg [15:0] prev_pc;
 reg        invalid_write;
 
-wire valid_stack_write = (data_addr < ebp); 
+wire valid_stack_write = (data_addr < ebp);
+//wire inst_change = (prev_pc != pc); 
 
 initial
 begin
     ebp = 16'h0000;
+    //prev_pc = 16'h0000;
     invalid_write = 1'b1;
 end
 
 always @(posedge clk)
 begin
+
     case (ucc_state)
         notUCC:
-        if (outside_ucc)
+        if (outside_ucc && inst_changed)//prev_pc != pc)
             ebp <= stack_pointer;
         else
             ebp <= ebp;
@@ -67,7 +75,7 @@ begin
         RST:
             if (pc == RESET_HANDLER && !data_wr && !system_reset) 
             begin
-                if (outside_ucc) 
+                if (outside_ucc && inst_changed)//prev_pc != pc) 
                     ebp <= stack_pointer;
                 else
                     ebp <= ebp;
@@ -75,12 +83,14 @@ begin
             else
                 ebp <= ebp;	    
     endcase
+    //prev_pc <= pc;
 end
 
 // OUTPUT LOGIC //////////////////////////////////////////////////////////
 always @(posedge clk)
 begin
     if ( (!(ucc_state == RST) && !outside_ucc && data_wr && !valid_stack_write) || 
+         (ucc_state == inUCC && outside_ucc && stack_pointer != ebp) ||
          (ucc_state == RST && (pc != RESET_HANDLER | data_wr))
        )
            invalid_write <= 1'b1;
