@@ -41,6 +41,9 @@ malicious_stack_write_simple :
 	
 malicious_stack_write_complex :
 	sh build/run "violations_stack_integrity/malicious_stack_write_complex" true
+
+malicious_stack_pointer :
+	sh build/run "violations_stack_integrity/malicious_stack_pointer" true
 	
 write_to_pointer :
 	sh build/run "violations_stack_integrity/write_to_pointer" true
