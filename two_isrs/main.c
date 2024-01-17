@@ -38,6 +38,8 @@ uint16_t ucc3max __attribute__((section (".ucc3max"))) = 0xE166;
 
 char* test_password = "chaos";
 int counter = 0;
+int temp = 0;
+int sentinel = 0;
 
 
 /* A function to stand in for some secure operation
@@ -94,11 +96,31 @@ __attribute__ ((section (".regionTwo"))) int passwordComparison(char *actual, ch
 
 ISR(PORT1,TCB){
 	P1IFG &= ~P1IFG;
+	_BIS_SR(GIE);
+        for(int i=0; i<5; i++){
+            if(sentinel){
+                temp = temp + 2;
+                sentinel = 0;
+            }else{
+                temp++;
+                sentinel = 1;
+            }
+        }
 	P5OUT = ~P5OUT;
 }
 
 ISR(PORT2,TCC){
 	P2IFG &= ~P2IFG;
+	_BIS_SR(GIE);
+        for(int i=0; i<5; i++){
+            if(sentinel){
+                temp = temp + 2;
+                sentinel = 0;
+            }else{
+                temp++;
+                sentinel = 1;
+            }
+        }
 	P6OUT = ~P6OUT;
 }
 
