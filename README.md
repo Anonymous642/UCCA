@@ -274,9 +274,9 @@ Two_isrs is another benign clone of the simple_app program. Two_isrs, as the nam
 
 Just like the original test interrupt, the new interrupt can be triggered by performing the same steps on BTN1 in the waveform window.
 
-This is another test case that runs indefinitely (ucca_reset is always 0) and is configured to authenticate successfully by default. Thus the program will have successfully performed one iteration when "secureFunction" is called (pc = E0F6). This occurs around 226 microseconds into the simulation.
+This is another test case that runs indefinitely (ucca_reset is always 0) and is configured to authenticate successfully by default. Thus the program will have successfully performed one iteration when "secureFunction" is called (pc = E0F6). This occurs around 236 microseconds into the simulation.
 
-The UCCs are defined as follows: E27E-E2D6 (user input), E2D8-E334 (password comparison), and E118-E166 (ISRs). An interrupt can only be triggered if the GIE bit is high (set to 1). Thus if you want to try interrupting an interrupt you will need to find the GIE bit in the waveform window, right-click it, select "Force Constant", set the radix to binary, and set the value to 1. Once complete, simply perform the normal steps to trigger the second interrupt. Remember to remove the force on the GIE bit after the second interrupt is accepted. 
+The UCCs are defined as follows: E2CE-E326 (user input), E328-E384 (password comparison), and E118-E1B6 (ISRs). Unlike the previous cases, these interrupts contain a counting loop. This just allows the ISR to run longer making them easier to interrupt if desired. Similarly, an interrupt can only be triggered if the GIE bit is high (set to 1). Thus once the ISR clears its interrupt flag, it also sets the GIE bit back to high. To simulate nested interrupts simply trigger an interrupt using one of the buttons, wait for the GIE bit to go back to high, and then trigger an interrupt with the remaining button. Remember to clear each button after the interrupt has been accepted.
 
 #### 5- violation_cr_integrity:
 
